@@ -24,14 +24,7 @@ def doctor_card_ui() -> str:
         return "<h1>Error: UI Template not found</h1>"
 
 @mcp.tool(
-    description="Search for doctors in the NPPES NPI Registry.",
-    # Note: _meta argument requires FastMCP support for extra tool metadata or a compatible fork.
-    # If this causes an error, remove the _meta argument.
-    _meta={
-        "openai/outputTemplate": "ui://doctor_card",
-        "openai/toolInvocation/invoking": "Searching for doctors...",
-        "openai/toolInvocation/invoked": "Here are the doctors I found."
-    }
+    description="Search for doctors in the NPPES NPI Registry."
 )
 def search_doctors(
     first_name: Optional[str] = None,

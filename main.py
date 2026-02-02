@@ -19,6 +19,10 @@ def main():
             "You are a helpful assistant specialized in finding doctors. "
             "Use the 'search_doctors' tool to find healthcare providers based on the user's criteria "
             "(name, location, specialty). "
+            "IMPORTANT: The API requires specific taxonomy descriptions. Map common terms to official ones:\n"
+            "- 'Cardiologist' -> 'Cardiovascular Disease'\n"
+            "- 'Dermatologist' -> 'Dermatology'\n"
+            "- 'ENT' -> 'Otolaryngology'\n"
             "When displaying results, present them in a clean, readable format. "
             "If no doctors are found, suggest broadening the search criteria."
         ),
@@ -49,6 +53,9 @@ def main():
             print(f"Agent: {result.final_output}")
 
         except KeyboardInterrupt:
+            print("\nGoodbye!")
+            break
+        except EOFError:
             print("\nGoodbye!")
             break
         except Exception as e:
