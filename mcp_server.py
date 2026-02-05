@@ -1,20 +1,22 @@
 import requests
 from typing import Optional, List, Dict, Any
 
-from mcp.server import Server
-from mcp.server.sse import serve
+from mcp.server.mcpserver import MCPServer
+from mcp.server.sse import serve_sse
 
-# Create MCP server
-server = Server(
+# -------------------------------------------------
+# Create MCP server (THIS is the correct way)
+# -------------------------------------------------
+mcp = MCPServer(
     name="DoctorListing",
     version="1.0.0",
     description="Search doctors using the NPPES NPI Registry",
 )
 
-# -------------------------
-# Resource: metadata
-# -------------------------
-@server.resource("doctorlisting://metadata")
+# -------------------------------------------------
+# Non-UI resource (REQUIRED for Scan Tools)
+# -------------------------------------------------
+@mcp.resource("doctorlisting://metadata")
 def metadata() -> Dict[str, Any]:
     return {
         "name": "DoctorListing MCP",
@@ -22,10 +24,10 @@ def metadata() -> Dict[str, Any]:
         "description": "Search doctors using the NPPES NPI Registry",
     }
 
-# -------------------------
-# Resource: UI (optional, allowed)
-# -------------------------
-@server.resource("ui://doctor_card")
+# -------------------------------------------------
+# UI resource (OPTIONAL – can keep it)
+# -------------------------------------------------
+@mcp.resource("ui://doctor_card")
 def doctor_card_ui() -> str:
     try:
         with open("ui/doctor_card.html", "r") as f:
@@ -33,10 +35,13 @@ def doctor_card_ui() -> str:
     except FileNotFoundError:
         return "<h1>Error: UI Template not found</h1>"
 
-# -------------------------
+# -------------------------------------------------
 # Tool: search_doctors
-# -------------------------
-@server.tool()
+# -------------------------------------------------
+@mcp.tool(
+    name="search_doctors",
+    description="Search for doctors in the NPPES NPI Registry",
+)
 def search_doctors(
     first_name: Optional[str] = None,
     last_name: Optional[str] = None,
@@ -45,9 +50,6 @@ def search_doctors(
     specialty: Optional[str] = None,
     limit: int = 10,
 ) -> List[Dict[str, Any]]:
-    """
-    Search for doctors in the NPPES NPI Registry.
-    """
 
     base_url = "https://npiregistry.cms.hhs.gov/api/"
     params = {
@@ -101,9 +103,12 @@ def search_doctors(
     return results
 
 
+# -------------------------------------------------
+# Run via SSE (REQUIRED)
+# -------------------------------------------------
 if __name__ == "__main__":
-    serve(
-        server,
+    serve_sse(
+        mcp,
         host="0.0.0.0",
         port=8000,
         path="/sse",
