@@ -97,5 +97,5 @@ def search_doctors(
     except Exception as e:
         return [{"error": str(e)}]
 
-if __name__ == "__main__":
-    mcp.run()
+#if __name__ == "__main__":
+#    mcp.run()
