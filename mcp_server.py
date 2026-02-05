@@ -1,25 +1,20 @@
 import requests
 from typing import Optional, List, Dict, Any
 
-from mcp.server import MCPServer
-from mcp.server.types import Tool, ToolResult, Resource
-from mcp.server.sse import run_sse
+from mcp.server import Server
+from mcp.server.sse import serve
 
 # Create MCP server
-server = MCPServer(
+server = Server(
     name="DoctorListing",
-    description="Search doctors using the NPPES NPI Registry",
     version="1.0.0",
+    description="Search doctors using the NPPES NPI Registry",
 )
 
 # -------------------------
 # Resource: metadata
 # -------------------------
-@server.resource(
-    uri="doctorlisting://metadata",
-    name="DoctorListing Metadata",
-    description="Basic metadata about the DoctorListing MCP server",
-)
+@server.resource("doctorlisting://metadata")
 def metadata() -> Dict[str, Any]:
     return {
         "name": "DoctorListing MCP",
@@ -28,13 +23,9 @@ def metadata() -> Dict[str, Any]:
     }
 
 # -------------------------
-# Resource: UI (allowed)
+# Resource: UI (optional, allowed)
 # -------------------------
-@server.resource(
-    uri="ui://doctor_card",
-    name="Doctor Card UI",
-    description="HTML UI for displaying doctor information",
-)
+@server.resource("ui://doctor_card")
 def doctor_card_ui() -> str:
     try:
         with open("ui/doctor_card.html", "r") as f:
@@ -45,10 +36,7 @@ def doctor_card_ui() -> str:
 # -------------------------
 # Tool: search_doctors
 # -------------------------
-@server.tool(
-    name="search_doctors",
-    description="Search for doctors in the NPPES NPI Registry",
-)
+@server.tool()
 def search_doctors(
     first_name: Optional[str] = None,
     last_name: Optional[str] = None,
@@ -57,6 +45,9 @@ def search_doctors(
     specialty: Optional[str] = None,
     limit: int = 10,
 ) -> List[Dict[str, Any]]:
+    """
+    Search for doctors in the NPPES NPI Registry.
+    """
 
     base_url = "https://npiregistry.cms.hhs.gov/api/"
     params = {
@@ -110,11 +101,8 @@ def search_doctors(
     return results
 
 
-# -------------------------
-# Run via SSE (REQUIRED)
-# -------------------------
 if __name__ == "__main__":
-    run_sse(
+    serve(
         server,
         host="0.0.0.0",
         port=8000,
