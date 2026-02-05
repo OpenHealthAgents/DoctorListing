@@ -5,6 +5,14 @@ from typing import Optional, List, Dict, Any
 # Create ONE MCP server instance
 mcp = FastMCP("DoctorListing")
 
+@mcp.resource("doctorlisting://metadata")
+def metadata() -> dict:
+    return {
+        "name": "DoctorListing MCP",
+        "version": "1.0.0",
+        "description": "Search doctors using the NPPES NPI Registry"
+    }
+
 @mcp.resource("ui://doctor_card")
 def doctor_card_ui() -> str:
     try:
