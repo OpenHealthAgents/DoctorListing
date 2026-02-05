@@ -23,4 +23,5 @@ EXPOSE 8000
 # Note: fastmcp run defaults to SSE. For HTTP, we might need specific flags if the platform requires it.
 # However, the standard fastmcp run command is often sufficient for many MCP clients.
 # If you need to expose an HTTP server (SSE), use:
-CMD ["fastmcp", "run", "mcp_server.py", "--transport", "sse", "--port", "8000", "--host", "0.0.0.0"]
+#CMD ["fastmcp", "run", "mcp_server.py", "--transport", "sse", "--port", "8000", "--host", "0.0.0.0"]
+CMD ["python", "server.py"]
