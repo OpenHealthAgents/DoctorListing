@@ -1,7 +1,4 @@
 from __future__ import annotations
-import os
-
-os.environ["MCP_TRUSTED_HOSTS"] = "*"
 from typing import Any, Dict, List
 
 import httpx
