@@ -2,3 +2,5 @@ openai-agents
 requests
 fastmcp
 mcp
+httpx
+python-dotenv

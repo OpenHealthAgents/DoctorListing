@@ -1,0 +1,16 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Doctor Listing",
+  "name_for_model": "doctorlisting",
+  "description_for_human": "Search doctors in the NPPES NPI Registry",
+  "description_for_model": "Search doctors by name, specialty, city, or state and display results as cards.",
+  "tools": [
+    {
+      "name": "search_doctors",
+      "description": "Search doctors in the NPPES NPI Registry"
+    }
+  ],
+  "ui": {
+    "default_resource": "mcp://doctor_card"
+  }
+}
